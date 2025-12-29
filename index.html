@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 魔方極速挑戰賽</title>
+    <title>台灣 WCA 魔術方塊競賽 | Taiwan WCA Competitions</title>
     
     <style>
+        /* ... 略過 header, main, footer 的基礎樣式 ... */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -18,17 +19,13 @@
         header {
             background-color: #007bff;
             color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0 0 5px 0;
+            padding: 10px 0;
+            text-align: left;
+            padding-left: 20px;
         }
 
         main {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 30px auto;
             padding: 20px;
             background: white;
@@ -36,69 +33,97 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        h2, h3 {
-            color: #007bff;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 5px;
-            margin-top: 25px;
+        /* 按鈕樣式 */
+        .tab-buttons {
+            margin-bottom: 20px;
         }
 
-        .button {
-            display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            margin: 20px 0;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: #218838;
+        .tab-button {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            background-color: #e9ecef;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 5px;
+            transition: background-color 0.2s;
+            font-size: 1em;
         }
         
-        footer {
-            text-align: center;
-            padding: 15px;
-            margin-top: 20px;
-            color: #777;
-            font-size: 0.9em;
+        .tab-button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        /* 表格樣式 */
+        .competition-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .competition-table th, .competition-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .competition-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .competition-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 過去比賽的計數標籤 */
+        .past-count {
+            background-color: #6c757d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+            font-size: 0.8em;
         }
     </style>
     </head>
 <body>
     <header>
-        <h1>🏆 2026 魔方極速挑戰賽</h1>
-        <p>速度與邏輯的極致考驗！</p>
+        台灣 WCA 魔術方塊競賽 | Taiwan WCA Competitions
     </header>
     
     <main>
-        <section id="details">
-            <h2>比賽詳情</h2>
-            <p><strong>日期：</strong> 2026 年 5 月 15 日 (星期五)</p>
-            <p><strong>地點：</strong> 台北市 XX 活動中心</p>
-            <p><strong>報名費：</strong> NT$ 300 (包含三階必選項目)</p>
+        <div class="tab-buttons">
+            <button class="tab-button active" id="presentBtn">
+                近期的比賽 (Present) <span id="presentCount"></span>
+            </button>
             
-            <h3>比賽項目</h3>
-            <ul>
-                <li>三階魔術方塊 (3x3x3)</li>
-                <li>二階魔術方塊 (2x2x2)</li>
-                <li>四階魔術方塊 (4x4x4)</li>
-                <li>三階單手 (3x3x3 One-Handed)</li>
-            </ul>
-            
-            <a href="registration.html" class="button">立即報名參賽 &gt;&gt;</a>
-        </section>
-        
-        <section id="rules">
-            <h2>重要規則</h2>
-            <p>本賽事依據 WCA 最新規則。請所有參賽者務必提前閱讀。</p>
-            </section>
+            <button class="tab-button" id="pastBtn">
+                過去的比賽 (Past) <span id="pastCount" class="past-count"></span>
+            </button>
+        </div>
+
+        <table class="competition-table">
+            <thead>
+                <tr>
+                    <th>比賽日期 Date</th>
+                    <th>比賽名稱 Name</th>
+                    <th>比賽城市 City</th>
+                </tr>
+            </thead>
+            <tbody id="competitionTableBody">
+                <tr><td colspan="3">載入中...</td></tr>
+            </tbody>
+        </table>
     </main>
 
     <footer>
-        <p>&copy; 2025 Cube Competition Organization | <a href="competitors.html">查看已報名選手</a></p>
+        <p>&copy; 2025 Cube Competition Organization</p>
     </footer>
+
+    <script src="data.js"></script>
+    <script>
+        // ... JavaScript 邏輯將放在這裡 (見 3. 的內容) ...
+    </script>
 </body>
 </html>
