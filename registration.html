@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>報名表單 - 魔方挑戰賽</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0 0 5px 0;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 表單樣式 */
+        form fieldset {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        form legend {
+            font-weight: bold;
+            color: #007bff;
+            padding: 0 10px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        form input[type="text"],
+        form input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
+        }
+
+        .total-display {
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        #submitBtn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        #submitBtn:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+    </head>
+<body>
+    <header>
+        <h1>📝 報名參賽</h1>
+        <p>請填寫您的資料並選擇參賽項目。</p>
+    </header>
+    
+    <main>
+        <form id="registrationForm" action="YOUR_FORMSPREE_ENDPOINT" method="POST"> 
+            
+            <fieldset>
+                <legend>個人資料</legend>
+                <label for="name">選手姓名 (必填):</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">電子郵件 (必填):</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="wcaId">WCA ID (選填):</label>
+                <input type="text" id="wcaId" name="wcaId" placeholder="若無可不填">
+            </fieldset>
+
+            <fieldset>
+                <legend>選擇參賽項目 (至少一項)</legend>
+                <input type="checkbox" id="event3x3" name="events[]" value="3x3x3" required>
+                <label for="event3x3">三階魔術方塊 (NT$ 300)</label><br>
+                
+                <input type="checkbox" id="event2x2" name="events[]" value="2x2x2">
+                <label for="event2x2">二階魔術方塊 (NT$ 50)</label><br>
+                
+                <input type="checkbox" id="event4x4" name="events[]" value="4x4x4">
+                <label for="event4x4">四階魔術方塊 (NT$ 50)</label><br>
+                
+                <p class="total-display">預計總費用：<span id="totalFee">NT$ 300</span></p>
+            </fieldset>
+
+            <fieldset>
+                <label for="agree">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    我已閱讀並同意所有比賽規則。
+                </label>
+            </fieldset>
+            
+            <button type="submit" id="submitBtn">提交報名 & 進行支付</button>
+            <p id="errorMsg" style="color: red;"></p>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const checkboxes = form.querySelectorAll('input[name="events[]"]'); // 注意 name 改為 events[]
+            const totalFeeSpan = document.getElementById('totalFee');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // 定義各項目費用
+            const eventFees = {
+                '3x3x3': 300, // 必選，作為基礎費用
+                '2x2x2': 50,
+                '4x4x4': 50
+            };
+
+            // 費用計算邏輯
+            function calculateTotalFee() {
+                let total = 0;
+                let is3x3Checked = false;
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        total += eventFees[checkbox.value] || 0;
+                        if (checkbox.value === '3x3x3') {
+                            is3x3Checked = true;
+                        }
+                    }
+                });
+
+                // 確保基礎費用 300 始終被計入 (因為 3x3x3 是必選)
+                if (!is3x3Checked) {
+                    // 如果用戶在 JS 運行前取消了 3x3x3 的勾選，這裡會出錯，但我們在 HTML 中已將其設定為 required。
+                    // 為了邏輯健全，我們假設用戶至少會選一個，且 3x3x3 是基礎費。
+                    // 這裡的邏輯是累加所有選中的費用。
+                }
+
+                totalFeeSpan.textContent = `NT$ ${total}`;
+                return total;
+            }
+
+            // 監聽 checkbox 變化
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotalFee);
+            });
+            
+            // 讓 3x3x3 預設為已勾選且不可取消 (因為它是基礎費)
+            const event3x3Checkbox = document.getElementById('event3x3');
+            event3x3Checkbox.checked = true; // 預設勾選
+            
+            // 表單提交驗證
+            form.addEventListener('submit', function(e) {
+                errorMsg.textContent = ''; // 清除舊錯誤
+
+                // 1. 確保 3x3x3 是被選中的
+                if (!document.getElementById('event3x3').checked) {
+                    errorMsg.textContent = '錯誤：三階魔術方塊為必選項目。';
+                    e.preventDefault();
+                    return;
+                }
+
+                // 2. 檢查是否同意規則
+                if (!document.getElementById('agree').checked) {
+                     errorMsg.textContent = '錯誤：請勾選同意比賽規則。';
+                     e.preventDefault();
+                     return;
+                }
+                
+                // 提交前的提醒
+                const total = calculateTotalFee();
+                
+                // 由於您要使用外部服務，這裡將允許表單提交到 action 指定的端點。
+                alert(`報名資料已準備好。應付總金額：NT$ ${total}。資料將發送到後端/外部服務。`);
+                
+                // 注意：如果使用 Formspree，action="YOUR_FORMSPREE_ENDPOINT" 需要設定正確。
+                // 成功發送後，Formspree 會將用戶導向到一個預設的確認頁面。
+            });
+            
+            // 初始計算費用
+            calculateTotalFee(); 
+        });
+    </script>
+    </body>
+</html>
